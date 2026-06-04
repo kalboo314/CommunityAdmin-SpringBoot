@@ -37,6 +37,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findByUsername(String username) {
+        return userDao.findByUsername(username);
+    }
+
+    @Override
     public List<User> findAll() {
         return userDao.findAll();
     }
@@ -44,6 +49,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findByRole(String role) {
         return userDao.findByRole(role);
+    }
+
+    @Override
+    public List<User> findPending() {
+        return userDao.findByActiveStatus(false);
     }
 
     @Override

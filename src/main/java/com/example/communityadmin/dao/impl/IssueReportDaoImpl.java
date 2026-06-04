@@ -25,6 +25,8 @@ public class IssueReportDaoImpl implements IssueReportDao {
         ir.setResolutionNotes(rs.getString("resolution_notes"));
         ir.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
         ir.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+        try { ir.setPhotoPath(rs.getString("photo_path")); } catch (SQLException ignored) {}
+        try { ir.setResolutionPhotoPath(rs.getString("resolution_photo_path")); } catch (SQLException ignored) {}
         try { ir.setResidentName(rs.getString("resident_name")); } catch (SQLException ignored) {}
         try { ir.setAssignedStaffName(rs.getString("staff_name")); } catch (SQLException ignored) {}
         return ir;
@@ -125,8 +127,8 @@ public class IssueReportDaoImpl implements IssueReportDao {
 
     @Override
     public void save(IssueReport report) {
-        String sql = "INSERT INTO issue_reports (resident_id, category, title, description, location) " +
-                "VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO issue_reports (resident_id, category, title, description, location, photo_path) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, report.getResidentId());
@@ -134,6 +136,7 @@ public class IssueReportDaoImpl implements IssueReportDao {
             ps.setString(3, report.getTitle());
             ps.setString(4, report.getDescription());
             ps.setString(5, report.getLocation());
+            ps.setString(6, report.getPhotoPath());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -142,16 +145,18 @@ public class IssueReportDaoImpl implements IssueReportDao {
 
     @Override
     public void updateStatus(int id, String status, Integer assignedStaffId,
-                             String resolutionNotes) {
+                             String resolutionNotes, String resolutionPhotoPath) {
         String sql = "UPDATE issue_reports SET status = ?, " +
                 "assigned_staff_id = COALESCE(?, assigned_staff_id), " +
-                "resolution_notes = COALESCE(?, resolution_notes) WHERE id = ?";
+                "resolution_notes = COALESCE(?, resolution_notes), " +
+                "resolution_photo_path = COALESCE(?, resolution_photo_path) WHERE id = ?";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, status);
             ps.setObject(2, assignedStaffId);
             ps.setString(3, resolutionNotes);
-            ps.setInt(4, id);
+            ps.setString(4, resolutionPhotoPath);
+            ps.setInt(5, id);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

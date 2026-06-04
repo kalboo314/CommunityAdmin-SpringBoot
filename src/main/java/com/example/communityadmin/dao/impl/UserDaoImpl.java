@@ -83,17 +83,33 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void save(User user) {
-        String sql = "INSERT INTO users (full_name, username, password, role) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO users (full_name, username, password, role, is_active) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, user.getFullName());
             ps.setString(2, user.getUsername());
             ps.setString(3, user.getPassword());
             ps.setString(4, user.getRole());
+            ps.setBoolean(5, user.isActive());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public List<User> findByActiveStatus(boolean active) {
+        String sql = "SELECT * FROM users WHERE is_active = ? ORDER BY created_at DESC";
+        List<User> list = new ArrayList<>();
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setBoolean(1, active);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) list.add(mapRow(rs));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
     @Override

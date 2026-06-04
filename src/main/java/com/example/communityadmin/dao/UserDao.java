@@ -8,6 +8,7 @@ public interface UserDao {
     User findById(int id);
     List<User> findAll();
     List<User> findByRole(String role);
+    List<User> findByActiveStatus(boolean active);
     void save(User user);
     void update(User user);
     void delete(int id);

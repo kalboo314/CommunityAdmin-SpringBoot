@@ -14,7 +14,12 @@
   </div>
   <div class="card">
     <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+    <div class="alert alert-info" th:if="${linkedUser}">
+      Filling biodata for registered account:
+      <strong th:text="${linkedUser.username}"></strong>
+    </div>
     <form method="post" th:action="@{/admin/residents/add}">
+      <input type="hidden" name="userId" th:if="${linkedUser}" th:value="${linkedUser.id}" />
       <div class="form-row">
         <div class="form-group">
           <label>NIK</label>
@@ -22,7 +27,8 @@
         </div>
         <div class="form-group">
           <label>Full Name</label>
-          <input type="text" name="fullName" class="form-control" placeholder="Full Name" required />
+          <input type="text" name="fullName" class="form-control" placeholder="Full Name"
+                 th:value="${linkedUser != null ? linkedUser.fullName : ''}" required />
         </div>
       </div>
       <div class="form-row">

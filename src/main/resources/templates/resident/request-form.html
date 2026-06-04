@@ -2,59 +2,39 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>My Document Requests</title>
+    <title>Request Document</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 <div th:replace="~{fragments/sidebar :: resident-sidebar}"></div>
 <div class="main-content">
     <div class="topbar">
-        <h2>My Document Requests</h2>
+        <h2>Request a Document</h2>
         <span class="topbar-user">👤 <span th:text="${user.fullName}"></span></span>
     </div>
-    <div class="alert alert-success" th:if="${param.submitted}">
-        ✅ Your request has been submitted successfully!
-    </div>
     <div class="card">
-        <div class="card-header">
-            <h3>Request History</h3>
-            <a th:href="@{/resident/requests/new}" class="btn btn-primary">➕ New Request</a>
-        </div>
-        <table>
-            <thead>
-            <tr>
-                <th>ID</th><th>Document Type</th><th>Purpose</th>
-                <th>Status</th><th>Submitted</th><th>Notes</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="req : ${requests}">
-                <td th:text="${req.id}"></td>
-                <td th:text="${req.documentType}"></td>
-                <td th:text="${req.purpose}"></td>
-                <td>
-                    <span class="badge badge-submitted" th:if="${req.status == 'Submitted'}">Submitted</span>
-                    <span class="badge badge-progress" th:if="${req.status == 'In Progress'}">In Progress</span>
-                    <span class="badge badge-approved" th:if="${req.status == 'Approved'}">Approved</span>
-                    <span class="badge badge-rejected" th:if="${req.status == 'Rejected'}">Rejected</span>
-                    <span class="badge badge-ready" th:if="${req.status == 'Ready'}">Ready for Collection</span>
-                </td>
-                <td th:text="${#temporals.format(req.createdAt, 'dd MMM yyyy')}"></td>
-                <td>
-                        <span th:if="${req.status == 'Rejected'}"
-                              style="color:#c62828; font-size:13px;"
-                              th:text="'Reason: ' + ${req.rejectionReason}"></span>
-                    <span th:if="${req.status == 'Ready'}"
-                          style="color:#6a1b9a; font-size:13px;">Please collect at the office</span>
-                </td>
-            </tr>
-            <tr th:if="${#lists.isEmpty(requests)}">
-                <td colspan="6" style="text-align:center; color:#aaa; padding:24px;">
-                    No requests yet. <a th:href="@{/resident/requests/new}">Submit your first request.</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <form method="post" th:action="@{/resident/requests/submit}">
+            <div class="form-group">
+                <label>Document Type</label>
+                <select name="documentType" class="form-control">
+                    <option value="Domicile Certificate">Domicile Certificate</option>
+                    <option value="Low-Income Certificate">Low-Income Certificate</option>
+                    <option value="Business Ownership Certificate">Business Ownership Certificate</option>
+                    <option value="Birth Certificate Referral">Birth Certificate Referral</option>
+                    <option value="Death Certificate Referral">Death Certificate Referral</option>
+                    <option value="Identity Document Referral">Identity Document Referral</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Purpose / Reason</label>
+                <textarea name="purpose" class="form-control" rows="4"
+                          placeholder="Describe the purpose of this document request..." required></textarea>
+            </div>
+            <div style="display:flex; gap:12px; margin-top:8px;">
+                <button type="submit" class="btn btn-primary">Submit Request</button>
+                <a th:href="@{/resident/requests}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
     </div>
 </div>
 </body>

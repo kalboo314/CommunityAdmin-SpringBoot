@@ -11,7 +11,7 @@ public interface IssueReportService {
     IssueReport findById(int id);
     void submit(IssueReport report);
     void assign(int id, int staffId);
-    void updateStatus(int id, String status, String resolutionNotes);
+    void updateStatus(int id, String status, String resolutionNotes, String resolutionPhotoPath, Integer staffId);
     int countAll();
     int countByStatus(String status);
 }

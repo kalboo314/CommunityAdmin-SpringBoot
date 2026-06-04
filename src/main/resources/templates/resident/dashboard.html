@@ -20,14 +20,18 @@
   </div>
   <div th:unless="${noProfile}">
     <div class="stats-grid">
-      <div class="stat-card">
-        <h3 th:text="${myRequests.size()}">0</h3>
-        <p>My Document Requests</p>
-      </div>
-      <div class="stat-card warning">
-        <h3 th:text="${myIssues.size()}">0</h3>
-        <p>My Issue Reports</p>
-      </div>
+      <a th:href="@{/resident/requests}" style="text-decoration:none;">
+        <div class="stat-card" style="cursor:pointer;">
+          <h3 th:text="${myRequests.size()}">0</h3>
+          <p>My Document Requests</p>
+        </div>
+      </a>
+      <a th:href="@{/resident/issues}" style="text-decoration:none;">
+        <div class="stat-card warning" style="cursor:pointer;">
+          <h3 th:text="${myIssues.size()}">0</h3>
+          <p>My Issue Reports</p>
+        </div>
+      </a>
     </div>
     <div class="card">
       <div class="card-header"><h3>My Profile</h3></div>

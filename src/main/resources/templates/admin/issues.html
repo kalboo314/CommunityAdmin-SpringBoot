@@ -29,7 +29,7 @@
             <thead>
             <tr>
                 <th>ID</th><th>Resident</th><th>Category</th>
-                <th>Title</th><th>Location</th><th>Status</th><th>Assigned To</th><th>Actions</th>
+                <th>Title</th><th>Location</th><th>Evidence</th><th>Status</th><th>Assigned To</th><th>Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -39,6 +39,24 @@
                 <td th:text="${issue.category}"></td>
                 <td th:text="${issue.title}"></td>
                 <td th:text="${issue.location}"></td>
+                <td>
+                    <div th:if="${issue.photoPath != null}">
+                        <span style="font-size:11px; color:#888; display:block;">Reported</span>
+                        <a th:href="@{'/uploads/' + ${issue.photoPath}}" target="_blank">
+                            <img th:src="@{'/uploads/' + ${issue.photoPath}}"
+                                 style="width:60px; height:60px; object-fit:cover; border-radius:4px;" />
+                        </a>
+                    </div>
+                    <div th:if="${issue.resolutionPhotoPath != null}" style="margin-top:6px;">
+                        <span style="font-size:11px; color:#888; display:block;">Response</span>
+                        <a th:href="@{'/uploads/' + ${issue.resolutionPhotoPath}}" target="_blank">
+                            <img th:src="@{'/uploads/' + ${issue.resolutionPhotoPath}}"
+                                 style="width:60px; height:60px; object-fit:cover; border-radius:4px;" />
+                        </a>
+                    </div>
+                    <span th:if="${issue.photoPath == null and issue.resolutionPhotoPath == null}"
+                          style="color:#aaa;">—</span>
+                </td>
                 <td>
                     <span class="badge badge-reported" th:if="${issue.status == 'Reported'}">Reported</span>
                     <span class="badge badge-review" th:if="${issue.status == 'Under Review'}">Under Review</span>

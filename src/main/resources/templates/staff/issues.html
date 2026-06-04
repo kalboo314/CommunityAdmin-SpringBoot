@@ -9,16 +9,59 @@
 <div th:replace="~{fragments/sidebar :: staff-sidebar}"></div>
 <div class="main-content">
   <div class="topbar">
-    <h2>My Assigned Issues</h2>
+    <h2>Issue Reports</h2>
     <span class="topbar-user">👤 <span th:text="${user.fullName}"></span> — Staff</span>
   </div>
-  <div class="card">
-    <div class="card-header"><h3>My Issues</h3></div>
+
+  <!-- New / unassigned issues -->
+  <div class="card" th:if="${!#lists.isEmpty(allIssues)}">
+    <div class="card-header"><h3>New Reports (Unassigned)</h3></div>
     <table>
       <thead>
       <tr>
-        <th>ID</th><th>Resident</th><th>Category</th>
-        <th>Title</th><th>Location</th><th>Status</th><th>Actions</th>
+        <th>ID</th><th>Resident</th><th>Category</th><th>Title</th>
+        <th>Location</th><th>Evidence</th><th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="issue : ${allIssues}">
+        <td th:text="${issue.id}"></td>
+        <td th:text="${issue.residentName}"></td>
+        <td th:text="${issue.category}"></td>
+        <td th:text="${issue.title}"></td>
+        <td th:text="${issue.location}"></td>
+        <td>
+          <a th:if="${issue.photoPath != null}"
+             th:href="@{'/uploads/' + ${issue.photoPath}}" target="_blank">
+            <img th:src="@{'/uploads/' + ${issue.photoPath}}"
+                 style="width:60px; height:60px; object-fit:cover; border-radius:4px;" />
+          </a>
+          <span th:if="${issue.photoPath == null}" style="color:#aaa;">—</span>
+        </td>
+        <td>
+          <form method="post"
+                th:action="@{/staff/issues/{id}/update(id=${issue.id})}"
+                enctype="multipart/form-data"
+                style="display:flex; flex-direction:column; gap:6px;">
+            <input type="hidden" name="status" value="Under Review" />
+            <button type="submit" class="btn btn-primary" style="width:fit-content;">
+              Take Issue
+            </button>
+          </form>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- My assigned issues -->
+  <div class="card">
+    <div class="card-header"><h3>My Assigned Issues</h3></div>
+    <table>
+      <thead>
+      <tr>
+        <th>ID</th><th>Resident</th><th>Category</th><th>Title</th>
+        <th>Location</th><th>Evidence</th><th>Status</th><th>Actions</th>
       </tr>
       </thead>
       <tbody>
@@ -29,14 +72,33 @@
         <td th:text="${issue.title}"></td>
         <td th:text="${issue.location}"></td>
         <td>
+          <div th:if="${issue.photoPath != null}">
+            <span style="font-size:11px; color:#888; display:block;">Reported</span>
+            <a th:href="@{'/uploads/' + ${issue.photoPath}}" target="_blank">
+              <img th:src="@{'/uploads/' + ${issue.photoPath}}"
+                   style="width:60px; height:60px; object-fit:cover; border-radius:4px;" />
+            </a>
+          </div>
+          <div th:if="${issue.resolutionPhotoPath != null}" style="margin-top:6px;">
+            <span style="font-size:11px; color:#888; display:block;">Response</span>
+            <a th:href="@{'/uploads/' + ${issue.resolutionPhotoPath}}" target="_blank">
+              <img th:src="@{'/uploads/' + ${issue.resolutionPhotoPath}}"
+                   style="width:60px; height:60px; object-fit:cover; border-radius:4px;" />
+            </a>
+          </div>
+          <span th:if="${issue.photoPath == null and issue.resolutionPhotoPath == null}"
+                style="color:#aaa;">—</span>
+        </td>
+        <td>
           <span class="badge badge-review" th:if="${issue.status == 'Under Review'}">Under Review</span>
           <span class="badge badge-progress" th:if="${issue.status == 'In Progress'}">In Progress</span>
           <span class="badge badge-resolved" th:if="${issue.status == 'Resolved'}">Resolved</span>
         </td>
         <td>
-          <form method="post"
+          <form th:if="${issue.status != 'Resolved'}"
+                method="post"
                 th:action="@{/staff/issues/{id}/update(id=${issue.id})}"
-                th:if="${issue.status != 'Resolved'}"
+                enctype="multipart/form-data"
                 style="display:flex; flex-direction:column; gap:6px;">
             <select name="status" class="form-control" style="padding:6px;">
               <option value="In Progress">In Progress</option>
@@ -44,14 +106,22 @@
             </select>
             <input type="text" name="resolutionNotes" class="form-control"
                    placeholder="Resolution notes (optional)" />
+            <div>
+              <label style="font-size:12px; color:#555;">Response photo (optional)</label>
+              <input type="file" name="resolutionPhoto" accept="image/*"
+                     class="form-control" style="font-size:13px;" />
+            </div>
             <button type="submit" class="btn btn-success">Update</button>
           </form>
-          <span th:if="${issue.status == 'Resolved'}"
-                style="color:#27ae60; font-size:13px;">✅ Resolved</span>
+          <div th:if="${issue.status == 'Resolved'}" style="font-size:13px; color:#27ae60;">
+            ✅ Resolved
+            <div th:if="${issue.resolutionNotes != null}"
+                 style="color:#555; margin-top:4px;" th:text="${issue.resolutionNotes}"></div>
+          </div>
         </td>
       </tr>
       <tr th:if="${#lists.isEmpty(myIssues)}">
-        <td colspan="7" style="text-align:center; color:#aaa; padding:24px;">
+        <td colspan="8" style="text-align:center; color:#aaa; padding:24px;">
           No issues assigned to you yet.
         </td>
       </tr>

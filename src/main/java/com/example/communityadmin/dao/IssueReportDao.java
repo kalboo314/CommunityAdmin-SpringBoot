@@ -10,7 +10,7 @@ public interface IssueReportDao {
     List<IssueReport> findByAssignedStaffId(int staffId);
     IssueReport findById(int id);
     void save(IssueReport report);
-    void updateStatus(int id, String status, Integer assignedStaffId, String resolutionNotes);
+    void updateStatus(int id, String status, Integer assignedStaffId, String resolutionNotes, String resolutionPhotoPath);
     int countAll();
     int countByStatus(String status);
 }

@@ -11,7 +11,7 @@
         <h2>🏛️ Community Admin</h2>
         <p class="subtitle">Sign in to your account</p>
         <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
-        <div class="alert alert-success" th:if="${param.registered}">Registration successful! Please login.</div>
+        <div class="alert alert-success" th:if="${param.registered}">Registration submitted! Your account is pending approval by an administrator. You can log in once it has been approved.</div>
         <div class="alert alert-success" th:if="${param.logout}">You have been logged out.</div>
         <form method="post" th:action="@{/login}">
             <div class="form-group">

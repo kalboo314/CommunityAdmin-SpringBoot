@@ -12,6 +12,8 @@ public class IssueReport {
     private String status;
     private Integer assignedStaffId;
     private String resolutionNotes;
+    private String photoPath;
+    private String resolutionPhotoPath;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -93,6 +95,12 @@ public class IssueReport {
     public void setResolutionNotes(String resolutionNotes) {
         this.resolutionNotes = resolutionNotes;
     }
+
+    public String getPhotoPath() { return photoPath; }
+    public void setPhotoPath(String photoPath) { this.photoPath = photoPath; }
+
+    public String getResolutionPhotoPath() { return resolutionPhotoPath; }
+    public void setResolutionPhotoPath(String resolutionPhotoPath) { this.resolutionPhotoPath = resolutionPhotoPath; }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;

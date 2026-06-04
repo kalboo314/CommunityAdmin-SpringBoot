@@ -33,7 +33,13 @@ public class AuthController {
                         Model model) {
         User user = userService.login(username, password);
         if (user == null) {
-            model.addAttribute("error", "Invalid username or password");
+            User existing = userService.findByUsername(username);
+            if (existing != null && !existing.isActive()
+                    && existing.getPassword().equals(password)) {
+                model.addAttribute("error", "Your account is pending approval by an administrator.");
+            } else {
+                model.addAttribute("error", "Invalid username or password");
+            }
             return "auth/login";
         }
         session.setAttribute("loggedInUser", user);
@@ -69,6 +75,7 @@ public class AuthController {
             user.setUsername(username);
             user.setPassword(password);
             user.setRole(role);
+            user.setActive(false); // pending — awaits admin/staff approval
             userService.register(user);
             return "redirect:/login?registered=true";
         } catch (RuntimeException e) {

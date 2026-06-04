@@ -13,14 +13,16 @@
     <span class="topbar-user">👤 <span th:text="${user.fullName}"></span></span>
   </div>
   <div class="card">
-    <form method="post" th:action="@{/resident/issues/submit}">
+    <form method="post" th:action="@{/resident/issues/submit}" enctype="multipart/form-data">
       <div class="form-group">
         <label>Issue Category</label>
         <select name="category" class="form-control">
-          <option value="Road Damage">Road Damage</option>
+          <option value="Electricity Problem">Electricity Problem</option>
+          <option value="Broken Road">Broken Road</option>
+          <option value="Dirty Water / Water Supply">Dirty Water / Water Supply</option>
+          <option value="Drainage / Flooding">Drainage / Flooding</option>
           <option value="Street Lighting">Street Lighting</option>
-          <option value="Water Supply">Water Supply</option>
-          <option value="Sanitation">Sanitation</option>
+          <option value="Garbage / Sanitation">Garbage / Sanitation</option>
           <option value="Public Safety">Public Safety</option>
           <option value="Environmental">Environmental</option>
           <option value="Other">Other</option>
@@ -40,6 +42,11 @@
         <label>Location</label>
         <input type="text" name="location" class="form-control"
                placeholder="Where is the issue located?" required />
+      </div>
+      <div class="form-group">
+        <label>Evidence Photo <span style="color:#888; font-size:13px;">(optional)</span></label>
+        <input type="file" name="photo" class="form-control" accept="image/*" />
+        <small style="color:#888;">Upload a photo as evidence (JPG, PNG, max 5MB)</small>
       </div>
       <div style="display:flex; gap:12px; margin-top:8px;">
         <button type="submit" class="btn btn-danger">Submit Report</button>

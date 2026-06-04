@@ -69,6 +69,42 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 
+    // ── Registration Approvals ────────────────────────────────────
+
+    @GetMapping("/registrations")
+    public String registrations(HttpSession session, Model model) {
+        if (getAdmin(session) == null) return "redirect:/login";
+        model.addAttribute("pendingUsers", userService.findPending());
+        // Approved residents who still need their biodata filled in
+        java.util.Set<Integer> profiledUserIds = new java.util.HashSet<>();
+        for (Resident r : residentService.findAll()) {
+            profiledUserIds.add(r.getUserId());
+        }
+        java.util.List<User> residentsNeedingProfile = new java.util.ArrayList<>();
+        for (User u : userService.findByRole("RESIDENT")) {
+            if (u.isActive() && !profiledUserIds.contains(u.getId())) {
+                residentsNeedingProfile.add(u);
+            }
+        }
+        model.addAttribute("residentsNeedingProfile", residentsNeedingProfile);
+        model.addAttribute("user", getAdmin(session));
+        return "admin/registrations";
+    }
+
+    @GetMapping("/registrations/{id}/approve")
+    public String approveRegistration(@PathVariable int id, HttpSession session) {
+        if (getAdmin(session) == null) return "redirect:/login";
+        userService.updateActiveStatus(id, true);
+        return "redirect:/admin/registrations";
+    }
+
+    @GetMapping("/registrations/{id}/reject")
+    public String rejectRegistration(@PathVariable int id, HttpSession session) {
+        if (getAdmin(session) == null) return "redirect:/login";
+        userService.delete(id);
+        return "redirect:/admin/registrations";
+    }
+
     // ── Resident Management ───────────────────────────────────────
 
     @GetMapping("/residents")
@@ -86,8 +122,13 @@ public class AdminController {
     }
 
     @GetMapping("/residents/add")
-    public String addResidentPage(HttpSession session, Model model) {
+    public String addResidentPage(@RequestParam(required = false) Integer userId,
+                                  HttpSession session, Model model) {
         if (getAdmin(session) == null) return "redirect:/login";
+        if (userId != null) {
+            User account = userService.findById(userId);
+            model.addAttribute("linkedUser", account);
+        }
         model.addAttribute("user", getAdmin(session));
         return "admin/resident-form";
     }
@@ -101,10 +142,12 @@ public class AdminController {
                               @RequestParam String religion,
                               @RequestParam String occupation,
                               @RequestParam String maritalStatus,
+                              @RequestParam(required = false) Integer userId,
                               HttpSession session, Model model) {
         if (getAdmin(session) == null) return "redirect:/login";
         try {
             Resident resident = new Resident();
+            if (userId != null) resident.setUserId(userId);
             resident.setNik(nik);
             resident.setFullName(fullName);
             resident.setDateOfBirth(java.time.LocalDate.parse(dateOfBirth));

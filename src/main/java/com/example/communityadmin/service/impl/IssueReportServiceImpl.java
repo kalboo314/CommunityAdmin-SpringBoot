@@ -50,16 +50,16 @@ public class IssueReportServiceImpl implements IssueReportService {
         if (report == null) {
             throw new RuntimeException("Report not found");
         }
-        issueReportDao.updateStatus(id, "Under Review", staffId, null);
+        issueReportDao.updateStatus(id, "Under Review", staffId, null, null);
     }
 
     @Override
-    public void updateStatus(int id, String status, String resolutionNotes) {
+    public void updateStatus(int id, String status, String resolutionNotes, String resolutionPhotoPath, Integer staffId) {
         IssueReport report = issueReportDao.findById(id);
         if (report == null) {
             throw new RuntimeException("Report not found");
         }
-        issueReportDao.updateStatus(id, status, null, resolutionNotes);
+        issueReportDao.updateStatus(id, status, staffId, resolutionNotes, resolutionPhotoPath);
     }
 
     @Override

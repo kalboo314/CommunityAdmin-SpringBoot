@@ -4,9 +4,15 @@ import com.example.communityadmin.entity.*;
 import com.example.communityadmin.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.*;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/resident")
@@ -15,6 +21,9 @@ public class ResidentController {
     @Autowired private DocumentRequestService documentRequestService;
     @Autowired private IssueReportService issueReportService;
     @Autowired private ResidentService residentService;
+
+    @Value("${app.upload.dir:uploads}")
+    private String uploadDir;
 
     private User getResident(HttpSession session) {
         User user = (User) session.getAttribute("loggedInUser");
@@ -112,6 +121,7 @@ public class ResidentController {
                               @RequestParam String title,
                               @RequestParam String description,
                               @RequestParam String location,
+                              @RequestParam(required = false) MultipartFile photo,
                               HttpSession session) {
         User user = getResident(session);
         if (user == null) return "redirect:/login";
@@ -123,7 +133,23 @@ public class ResidentController {
         report.setTitle(title);
         report.setDescription(description);
         report.setLocation(location);
+        if (photo != null && !photo.isEmpty()) {
+            report.setPhotoPath(saveFile(photo));
+        }
         issueReportService.submit(report);
         return "redirect:/resident/issues?submitted=true";
+    }
+
+    private String saveFile(MultipartFile file) {
+        try {
+            Path dir = Paths.get(uploadDir).toAbsolutePath();
+            Files.createDirectories(dir);
+            String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
+            Files.copy(file.getInputStream(), dir.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
+            return filename;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
