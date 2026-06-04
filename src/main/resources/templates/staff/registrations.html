@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Registration Approvals</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/sidebar :: staff-sidebar}"></div>
+<div class="main-content">
+  <div class="topbar">
+    <h2>Registration Approvals</h2>
+    <span class="topbar-user">👤 <span th:text="${user.fullName}"></span> — Staff</span>
+  </div>
+  <div class="card">
+    <div class="card-header"><h3>Pending Account Requests</h3></div>
+    <p style="color:#888; font-size:13px; margin:0 0 12px;">
+      Approve a request to activate the account. Resident biodata is completed by an administrator.
+    </p>
+    <table>
+      <thead>
+      <tr>
+        <th>ID</th><th>Full Name</th><th>Username</th><th>Requested Role</th><th>Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="u : ${pendingUsers}">
+        <td th:text="${u.id}"></td>
+        <td th:text="${u.fullName}"></td>
+        <td th:text="${u.username}"></td>
+        <td>
+          <span class="badge badge-staff" th:if="${u.role == 'STAFF'}">Staff</span>
+          <span class="badge badge-resident" th:if="${u.role == 'RESIDENT'}">Resident</span>
+        </td>
+        <td>
+          <a th:href="@{/staff/registrations/{id}/approve(id=${u.id})}"
+             class="btn btn-success">Approve</a>
+        </td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(pendingUsers)}">
+        <td colspan="5" style="text-align:center; color:#aaa; padding:24px;">
+          No pending registration requests.
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Registration Approvals</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/sidebar :: admin-sidebar}"></div>
+<div class="main-content">
+  <div class="topbar">
+    <h2>Registration Approvals</h2>
+    <span class="topbar-user">👤 <span th:text="${user.fullName}"></span> — Admin</span>
+  </div>
+
+  <!-- Step 1: Pending account approvals -->
+  <div class="card">
+    <div class="card-header"><h3>Pending Account Requests</h3></div>
+    <table>
+      <thead>
+      <tr>
+        <th>ID</th><th>Full Name</th><th>Username</th><th>Requested Role</th><th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="u : ${pendingUsers}">
+        <td th:text="${u.id}"></td>
+        <td th:text="${u.fullName}"></td>
+        <td th:text="${u.username}"></td>
+        <td>
+          <span class="badge badge-staff" th:if="${u.role == 'STAFF'}">Staff</span>
+          <span class="badge badge-resident" th:if="${u.role == 'RESIDENT'}">Resident</span>
+        </td>
+        <td style="display:flex; gap:6px;">
+          <a th:href="@{/admin/registrations/{id}/approve(id=${u.id})}"
+             class="btn btn-success">Approve</a>
+          <a th:href="@{/admin/registrations/{id}/reject(id=${u.id})}"
+             class="btn btn-danger" onclick="return confirm('Reject and delete this request?')">Reject</a>
+        </td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(pendingUsers)}">
+        <td colspan="5" style="text-align:center; color:#aaa; padding:24px;">
+          No pending registration requests.
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Step 2: Approved residents who still need biodata -->
+  <div class="card">
+    <div class="card-header"><h3>Approved Residents — Biodata Needed</h3></div>
+    <table>
+      <thead>
+      <tr>
+        <th>ID</th><th>Full Name</th><th>Username</th><th>Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="u : ${residentsNeedingProfile}">
+        <td th:text="${u.id}"></td>
+        <td th:text="${u.fullName}"></td>
+        <td th:text="${u.username}"></td>
+        <td>
+          <a th:href="@{/admin/residents/add(userId=${u.id})}" class="btn btn-primary">Fill Biodata</a>
+        </td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(residentsNeedingProfile)}">
+        <td colspan="4" style="text-align:center; color:#aaa; padding:24px;">
+          All approved residents have their biodata set up.
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>
