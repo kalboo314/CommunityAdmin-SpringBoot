@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- ADMIN SIDEBAR -->
+<div th:fragment="admin-sidebar" class="sidebar">
+    <div class="sidebar-brand">
+        <h4>🏛️ Community Admin</h4>
+    </div>
+    <nav>
+        <a th:href="@{/admin/dashboard}" class="nav-item">
+            <span>📊</span> Dashboard
+        </a>
+        <a th:href="@{/admin/users}" class="nav-item">
+            <span>👥</span> User Accounts
+        </a>
+        <a th:href="@{/admin/residents}" class="nav-item">
+            <span>🏠</span> Residents
+        </a>
+        <a th:href="@{/admin/requests}" class="nav-item">
+            <span>📄</span> Document Requests
+        </a>
+        <a th:href="@{/admin/issues}" class="nav-item">
+            <span>⚠️</span> Issue Reports
+        </a>
+        <a th:href="@{/logout}" class="nav-item logout">
+            <span>🚪</span> Logout
+        </a>
+    </nav>
+</div>
+
+<!-- STAFF SIDEBAR -->
+<div th:fragment="staff-sidebar" class="sidebar">
+    <div class="sidebar-brand">
+        <h4>🏛️ Staff Panel</h4>
+    </div>
+    <nav>
+        <a th:href="@{/staff/dashboard}" class="nav-item">
+            <span>📊</span> Dashboard
+        </a>
+        <a th:href="@{/staff/residents}" class="nav-item">
+            <span>🏠</span> Residents
+        </a>
+        <a th:href="@{/staff/requests}" class="nav-item">
+            <span>📄</span> Document Requests
+        </a>
+        <a th:href="@{/staff/issues}" class="nav-item">
+            <span>⚠️</span> Issue Reports
+        </a>
+        <a th:href="@{/logout}" class="nav-item logout">
+            <span>🚪</span> Logout
+        </a>
+    </nav>
+</div>
+
+<!-- RESIDENT SIDEBAR -->
+<div th:fragment="resident-sidebar" class="sidebar">
+    <div class="sidebar-brand">
+        <h4>🏛️ Resident Portal</h4>
+    </div>
+    <nav>
+        <a th:href="@{/resident/dashboard}" class="nav-item">
+            <span>📊</span> Dashboard
+        </a>
+        <a th:href="@{/resident/requests}" class="nav-item">
+            <span>📄</span> My Requests
+        </a>
+        <a th:href="@{/resident/issues}" class="nav-item">
+            <span>⚠️</span> My Reports
+        </a>
+        <a th:href="@{/logout}" class="nav-item logout">
+            <span>🚪</span> Logout
+        </a>
+    </nav>
+</div>
+</body>
+</html>

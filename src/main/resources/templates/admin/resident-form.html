@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Resident</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/sidebar :: admin-sidebar}"></div>
+<div class="main-content">
+  <div class="topbar">
+    <h2>Add New Resident</h2>
+    <span class="topbar-user">👤 <span th:text="${user.fullName}"></span> — Admin</span>
+  </div>
+  <div class="card">
+    <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+    <form method="post" th:action="@{/admin/residents/add}">
+      <div class="form-row">
+        <div class="form-group">
+          <label>NIK</label>
+          <input type="text" name="nik" class="form-control" placeholder="National ID Number" required />
+        </div>
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" name="fullName" class="form-control" placeholder="Full Name" required />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date of Birth</label>
+          <input type="date" name="dateOfBirth" class="form-control" required />
+        </div>
+        <div class="form-group">
+          <label>Gender</label>
+          <select name="gender" class="form-control">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Address</label>
+        <textarea name="address" class="form-control" rows="2" placeholder="Full Address" required></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Religion</label>
+          <select name="religion" class="form-control">
+            <option>Islam</option>
+            <option>Christianity</option>
+            <option>Catholicism</option>
+            <option>Hinduism</option>
+            <option>Buddhism</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Occupation</label>
+          <input type="text" name="occupation" class="form-control" placeholder="Occupation" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Marital Status</label>
+        <select name="maritalStatus" class="form-control">
+          <option value="Single">Single</option>
+          <option value="Married">Married</option>
+          <option value="Divorced">Divorced</option>
+          <option value="Widowed">Widowed</option>
+        </select>
+      </div>
+      <div style="display:flex; gap:12px; margin-top:8px;">
+        <button type="submit" class="btn btn-primary">Save Resident</button>
+        <a th:href="@{/admin/residents}" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>

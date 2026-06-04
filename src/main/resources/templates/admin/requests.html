@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Document Requests</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/sidebar :: admin-sidebar}"></div>
+<div class="main-content">
+    <div class="topbar">
+        <h2>Document Requests</h2>
+        <span class="topbar-user">👤 <span th:text="${user.fullName}"></span> — Admin</span>
+    </div>
+    <div class="filter-bar">
+        <a th:href="@{/admin/requests}" class="filter-btn"
+           th:classappend="${selectedStatus == null} ? 'active'">All</a>
+        <a th:href="@{/admin/requests(status='Submitted')}" class="filter-btn"
+           th:classappend="${selectedStatus == 'Submitted'} ? 'active'">Submitted</a>
+        <a th:href="@{/admin/requests(status='In Progress')}" class="filter-btn"
+           th:classappend="${selectedStatus == 'In Progress'} ? 'active'">In Progress</a>
+        <a th:href="@{/admin/requests(status='Approved')}" class="filter-btn"
+           th:classappend="${selectedStatus == 'Approved'} ? 'active'">Approved</a>
+        <a th:href="@{/admin/requests(status='Rejected')}" class="filter-btn"
+           th:classappend="${selectedStatus == 'Rejected'} ? 'active'">Rejected</a>
+        <a th:href="@{/admin/requests(status='Ready')}" class="filter-btn"
+           th:classappend="${selectedStatus == 'Ready'} ? 'active'">Ready</a>
+    </div>
+    <div class="card">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th><th>Resident</th><th>NIK</th>
+                <th>Document Type</th><th>Purpose</th><th>Status</th><th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="req : ${requests}">
+                <td th:text="${req.id}"></td>
+                <td th:text="${req.residentName}"></td>
+                <td th:text="${req.residentNik}"></td>
+                <td th:text="${req.documentType}"></td>
+                <td th:text="${req.purpose}"></td>
+                <td>
+                    <span class="badge badge-submitted" th:if="${req.status == 'Submitted'}">Submitted</span>
+                    <span class="badge badge-progress" th:if="${req.status == 'In Progress'}">In Progress</span>
+                    <span class="badge badge-approved" th:if="${req.status == 'Approved'}">Approved</span>
+                    <span class="badge badge-rejected" th:if="${req.status == 'Rejected'}">Rejected</span>
+                    <span class="badge badge-ready" th:if="${req.status == 'Ready'}">Ready</span>
+                </td>
+                <td>
+                    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                        <a th:if="${req.status == 'In Progress'}"
+                           th:href="@{/admin/requests/{id}/approve(id=${req.id})}"
+                           class="btn btn-success">Approve</a>
+                        <a th:if="${req.status == 'Approved'}"
+                           th:href="@{/admin/requests/{id}/ready(id=${req.id})}"
+                           class="btn btn-info">Mark Ready</a>
+                        <button th:if="${req.status == 'In Progress' or req.status == 'Submitted'}"
+                                class="btn btn-danger"
+                                onclick="showRejectForm(this)"
+                                th:data-id="${req.id}">Reject</button>
+                    </div>
+                    <!-- Reject form -->
+                    <form method="post"
+                          th:action="@{/admin/requests/{id}/reject(id=${req.id})}"
+                          style="display:none; margin-top:8px;" class="reject-form">
+                        <input type="text" name="reason" class="form-control"
+                               placeholder="Rejection reason" required />
+                        <button type="submit" class="btn btn-danger" style="margin-top:6px;">Confirm Reject</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    function showRejectForm(btn) {
+        const row = btn.closest('td');
+        const form = row.querySelector('.reject-form');
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+</script>
+</body>
+</html>

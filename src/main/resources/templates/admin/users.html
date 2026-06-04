@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>User Accounts</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/sidebar :: admin-sidebar}"></div>
+<div class="main-content">
+  <div class="topbar">
+    <h2>User Accounts</h2>
+    <span class="topbar-user">👤 <span th:text="${user.fullName}"></span> — Admin</span>
+  </div>
+  <div class="card">
+    <table>
+      <thead>
+      <tr>
+        <th>ID</th><th>Full Name</th><th>Username</th>
+        <th>Role</th><th>Status</th><th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="u : ${users}">
+        <td th:text="${u.id}"></td>
+        <td th:text="${u.fullName}"></td>
+        <td th:text="${u.username}"></td>
+        <td>
+          <span class="badge badge-admin" th:if="${u.role == 'ADMIN'}">Admin</span>
+          <span class="badge badge-staff" th:if="${u.role == 'STAFF'}">Staff</span>
+          <span class="badge badge-resident" th:if="${u.role == 'RESIDENT'}">Resident</span>
+        </td>
+        <td>
+          <span class="badge badge-active" th:if="${u.active}">Active</span>
+          <span class="badge badge-inactive" th:unless="${u.active}">Inactive</span>
+        </td>
+        <td style="display:flex; gap:6px;">
+          <a th:if="${u.active}" th:href="@{/admin/users/deactivate/{id}(id=${u.id})}"
+             class="btn btn-warning" onclick="return confirm('Deactivate this user?')">Deactivate</a>
+          <a th:unless="${u.active}" th:href="@{/admin/users/activate/{id}(id=${u.id})}"
+             class="btn btn-success">Activate</a>
+          <a th:href="@{/admin/users/delete/{id}(id=${u.id})}"
+             class="btn btn-danger" onclick="return confirm('Delete this user?')">Delete</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

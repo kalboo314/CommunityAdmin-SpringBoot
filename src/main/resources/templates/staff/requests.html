@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Document Requests</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/sidebar :: staff-sidebar}"></div>
+<div class="main-content">
+    <div class="topbar">
+        <h2>Document Requests</h2>
+        <span class="topbar-user">👤 <span th:text="${user.fullName}"></span> — Staff</span>
+    </div>
+    <div class="card">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th><th>Resident</th><th>NIK</th>
+                <th>Document Type</th><th>Purpose</th><th>Status</th><th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="req : ${requests}">
+                <td th:text="${req.id}"></td>
+                <td th:text="${req.residentName}"></td>
+                <td th:text="${req.residentNik}"></td>
+                <td th:text="${req.documentType}"></td>
+                <td th:text="${req.purpose}"></td>
+                <td>
+                    <span class="badge badge-submitted" th:if="${req.status == 'Submitted'}">Submitted</span>
+                    <span class="badge badge-progress" th:if="${req.status == 'In Progress'}">In Progress</span>
+                    <span class="badge badge-approved" th:if="${req.status == 'Approved'}">Approved</span>
+                    <span class="badge badge-rejected" th:if="${req.status == 'Rejected'}">Rejected</span>
+                    <span class="badge badge-ready" th:if="${req.status == 'Ready'}">Ready</span>
+                </td>
+                <td>
+                    <a th:if="${req.status == 'Submitted'}"
+                       th:href="@{/staff/requests/{id}/process(id=${req.id})}"
+                       class="btn btn-warning"
+                       onclick="return confirm('Process this request?')">Process</a>
+                    <span th:if="${req.status != 'Submitted'}" style="color:#aaa; font-size:13px;">—</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

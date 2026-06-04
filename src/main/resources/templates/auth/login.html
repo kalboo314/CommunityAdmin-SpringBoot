@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login — Community Admin</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <h2>🏛️ Community Admin</h2>
+        <p class="subtitle">Sign in to your account</p>
+        <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+        <div class="alert alert-success" th:if="${param.registered}">Registration successful! Please login.</div>
+        <div class="alert alert-success" th:if="${param.logout}">You have been logged out.</div>
+        <form method="post" th:action="@{/login}">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" name="username" class="form-control" placeholder="Enter username" required />
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" class="form-control" placeholder="Enter password" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Sign In</button>
+        </form>
+        <div class="link">
+            Don't have an account? <a th:href="@{/register}">Register here</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

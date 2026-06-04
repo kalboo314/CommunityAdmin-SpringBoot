@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Request Document</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/sidebar :: resident-sidebar}"></div>
+<div class="main-content">
+  <div class="topbar">
+    <h2>Request a Document</h2>
+    <span class="topbar-user">👤 <span th:text="${user.fullName}"></span></span>
+  </div>
+  <div class="card">
+    <form method="post" th:action="@{/resident/requests/submit}">
+      <div class="form-group">
+        <label>Document Type</label>
+        <select name="documentType" class="form-control">
+          <option value="Domicile Certificate">Domicile Certificate</option>
+          <option value="Low-Income Certificate">Low-Income Certificate</option>
+          <option value="Business Ownership Certificate">Business Ownership Certificate</option>
+          <option value="Birth Certificate Referral">Birth Certificate Referral</option>
+          <option value="Death Certificate Referral">Death Certificate Referral</option>
+          <option value="Identity Document Referral">Identity Document Referral</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Purpose / Reason</label>
+        <textarea name="purpose" class="form-control" rows="4"
+                  placeholder="Describe the purpose of this document request..." required></textarea>
+      </div>
+      <div style="display:flex; gap:12px; margin-top:8px;">
+        <button type="submit" class="btn btn-primary">Submit Request</button>
+        <a th:href="@{/resident/requests}" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>

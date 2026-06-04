@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Issue Reports</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/sidebar :: admin-sidebar}"></div>
+<div class="main-content">
+    <div class="topbar">
+        <h2>Issue Reports</h2>
+        <span class="topbar-user">👤 <span th:text="${user.fullName}"></span> — Admin</span>
+    </div>
+    <div class="filter-bar">
+        <a th:href="@{/admin/issues}" class="filter-btn"
+           th:classappend="${selectedStatus == null} ? 'active'">All</a>
+        <a th:href="@{/admin/issues(status='Reported')}" class="filter-btn"
+           th:classappend="${selectedStatus == 'Reported'} ? 'active'">Reported</a>
+        <a th:href="@{/admin/issues(status='Under Review')}" class="filter-btn"
+           th:classappend="${selectedStatus == 'Under Review'} ? 'active'">Under Review</a>
+        <a th:href="@{/admin/issues(status='In Progress')}" class="filter-btn"
+           th:classappend="${selectedStatus == 'In Progress'} ? 'active'">In Progress</a>
+        <a th:href="@{/admin/issues(status='Resolved')}" class="filter-btn"
+           th:classappend="${selectedStatus == 'Resolved'} ? 'active'">Resolved</a>
+    </div>
+    <div class="card">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th><th>Resident</th><th>Category</th>
+                <th>Title</th><th>Location</th><th>Status</th><th>Assigned To</th><th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="issue : ${issues}">
+                <td th:text="${issue.id}"></td>
+                <td th:text="${issue.residentName}"></td>
+                <td th:text="${issue.category}"></td>
+                <td th:text="${issue.title}"></td>
+                <td th:text="${issue.location}"></td>
+                <td>
+                    <span class="badge badge-reported" th:if="${issue.status == 'Reported'}">Reported</span>
+                    <span class="badge badge-review" th:if="${issue.status == 'Under Review'}">Under Review</span>
+                    <span class="badge badge-progress" th:if="${issue.status == 'In Progress'}">In Progress</span>
+                    <span class="badge badge-resolved" th:if="${issue.status == 'Resolved'}">Resolved</span>
+                </td>
+                <td th:text="${issue.assignedStaffName != null ? issue.assignedStaffName : 'Unassigned'}"></td>
+                <td>
+                    <form method="post"
+                          th:action="@{/admin/issues/{id}/assign(id=${issue.id})}"
+                          style="display:flex; gap:6px;"
+                          th:if="${issue.status == 'Reported'}">
+                        <select name="staffId" class="form-control" style="width:130px; padding:6px;">
+                            <option th:each="s : ${staff}" th:value="${s.id}" th:text="${s.fullName}"></option>
+                        </select>
+                        <button type="submit" class="btn btn-primary">Assign</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

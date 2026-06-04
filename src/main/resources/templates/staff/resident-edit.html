@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Resident</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/sidebar :: staff-sidebar}"></div>
+<div class="main-content">
+    <div class="topbar">
+        <h2>Edit Resident</h2>
+        <span class="topbar-user">👤 <span th:text="${user.fullName}"></span> — Staff</span>
+    </div>
+    <div class="card">
+        <form method="post" th:action="@{/staff/residents/edit/{id}(id=${resident.id})}">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>NIK</label>
+                    <input type="text" name="nik" class="form-control" th:value="${resident.nik}" required />
+                </div>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" name="fullName" class="form-control" th:value="${resident.fullName}" required />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Date of Birth</label>
+                    <input type="date" name="dateOfBirth" class="form-control" th:value="${resident.dateOfBirth}" required />
+                </div>
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select name="gender" class="form-control">
+                        <option value="Male" th:selected="${resident.gender == 'Male'}">Male</option>
+                        <option value="Female" th:selected="${resident.gender == 'Female'}">Female</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Address</label>
+                <textarea name="address" class="form-control" rows="2" th:text="${resident.address}"></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Religion</label>
+                    <select name="religion" class="form-control">
+                        <option th:each="rel : ${ {'Islam','Christianity','Catholicism','Hinduism','Buddhism','Other'} }"
+                                th:value="${rel}" th:text="${rel}"
+                                th:selected="${rel == resident.religion}"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Occupation</label>
+                    <input type="text" name="occupation" class="form-control" th:value="${resident.occupation}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Marital Status</label>
+                <select name="maritalStatus" class="form-control">
+                    <option th:each="ms : ${ {'Single','Married','Divorced','Widowed'} }"
+                            th:value="${ms}" th:text="${ms}"
+                            th:selected="${ms == resident.maritalStatus}"></option>
+                </select>
+            </div>
+            <div style="display:flex; gap:12px; margin-top:8px;">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a th:href="@{/staff/residents}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

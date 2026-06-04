@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/sidebar :: admin-sidebar}"></div>
+<div class="main-content">
+    <div class="topbar">
+        <h2>Dashboard</h2>
+        <span class="topbar-user">👤 <span th:text="${user.fullName}"></span> — Admin</span>
+    </div>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3 th:text="${totalResidents}">0</h3>
+            <p>Total Residents</p>
+        </div>
+        <div class="stat-card warning">
+            <h3 th:text="${pendingRequests}">0</h3>
+            <p>Pending Requests</p>
+        </div>
+        <div class="stat-card danger">
+            <h3 th:text="${unresolvedIssues}">0</h3>
+            <p>Unresolved Issues</p>
+        </div>
+        <div class="stat-card success">
+            <h3 th:text="${totalRequests}">0</h3>
+            <p>Total Requests</p>
+        </div>
+        <div class="stat-card">
+            <h3 th:text="${totalIssues}">0</h3>
+            <p>Total Issues</p>
+        </div>
+        <div class="stat-card">
+            <h3 th:text="${totalUsers}">0</h3>
+            <p>Total Users</p>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h3>Quick Actions</h3>
+        </div>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <a th:href="@{/admin/residents/add}" class="btn btn-primary">➕ Add Resident</a>
+            <a th:href="@{/admin/requests}" class="btn btn-warning">📄 View Requests</a>
+            <a th:href="@{/admin/issues}" class="btn btn-danger">⚠️ View Issues</a>
+            <a th:href="@{/admin/users}" class="btn btn-secondary">👥 Manage Users</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

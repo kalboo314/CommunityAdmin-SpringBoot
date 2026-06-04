@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Resident Dashboard</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/sidebar :: resident-sidebar}"></div>
+<div class="main-content">
+  <div class="topbar">
+    <h2>Welcome, <span th:text="${user.fullName}"></span></h2>
+    <span class="topbar-user">👤 Resident Portal</span>
+  </div>
+  <div th:if="${noProfile}">
+    <div class="alert alert-info">
+      ⚠️ Your resident profile has not been set up yet.
+      Please contact the office staff to register your profile before using the services.
+    </div>
+  </div>
+  <div th:unless="${noProfile}">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3 th:text="${myRequests.size()}">0</h3>
+        <p>My Document Requests</p>
+      </div>
+      <div class="stat-card warning">
+        <h3 th:text="${myIssues.size()}">0</h3>
+        <p>My Issue Reports</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>My Profile</h3></div>
+      <table>
+        <tr><th>Full Name</th><td th:text="${resident.fullName}"></td></tr>
+        <tr><th>NIK</th><td th:text="${resident.nik}"></td></tr>
+        <tr><th>Gender</th><td th:text="${resident.gender}"></td></tr>
+        <tr><th>Address</th><td th:text="${resident.address}"></td></tr>
+        <tr><th>Occupation</th><td th:text="${resident.occupation}"></td></tr>
+        <tr><th>Marital Status</th><td th:text="${resident.maritalStatus}"></td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>Quick Actions</h3></div>
+      <div style="display:flex; gap:12px; flex-wrap:wrap;">
+        <a th:href="@{/resident/requests/new}" class="btn btn-primary">📄 Request Document</a>
+        <a th:href="@{/resident/issues/new}" class="btn btn-danger">⚠️ Report an Issue</a>
+        <a th:href="@{/resident/requests}" class="btn btn-secondary">View My Requests</a>
+        <a th:href="@{/resident/issues}" class="btn btn-secondary">View My Reports</a>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
